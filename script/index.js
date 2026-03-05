@@ -3,6 +3,13 @@ const createElement = (arr) => {
     return htmlElement.join(" ")
 
 }
+
+function pronounceWord(word) {
+  const utterance = new SpeechSynthesisUtterance(word);
+  utterance.lang = "en-EN"; // English
+  window.speechSynthesis.speak(utterance);
+}
+
 const manageSpinner = (status) => {
     if (status == true) {
         document.getElementById("spinner").classList.remove("hidden");
@@ -12,6 +19,8 @@ const manageSpinner = (status) => {
         document.getElementById("spinner").classList.add("hidden");
     }
 }
+
+
 
 const loadLessons = () => {
     fetch("https://openapi.programming-hero.com/api/levels/all")
@@ -45,6 +54,7 @@ const loadLevelWord = (id) => {
 }
 
 const loadWordDetails = async (id) => {
+   
     const url = `https://openapi.programming-hero.com/api/word/${id}`
     console.log(url);
     const res = await fetch(url)
@@ -63,7 +73,7 @@ const displayWordDetails = (wordDetails) => {
     const detailsContainer = document.getElementById("details-container")
     detailsContainer.innerHTML = `
    <div>
-            <h2 class="bangla-font text-2xl font-bold">${wordDetails.word} (<i class="fa-solid fa-microphone-lines"></i> : ${wordDetails.pronunciation})</h2>
+            <h2 class="bangla-font text-2xl font-bold">${wordDetails.word} (<i onclick="pronounceWord('${wordDetails.word}')" class="fa-solid fa-microphone-lines hover:cursor-pointer"></i> : ${wordDetails.pronunciation})</h2>
         </div>
         <div>
             <h2 class="font-bold">Meaning</h2>
@@ -110,7 +120,7 @@ const displayLevelWord = (words) => {
             <h2 class="bangla-font text-3xl font-semibold text-[#464649]">${word.meaning ? word.meaning : "অর্থ পাওয়া যায়নি"} / ${word.pronunciation ? word.pronunciation : "Pronunciation not fund"}</h2>
         <div class="flex justify-between items-center">
             <button onclick="loadWordDetails(${word.id})" class="btn bg-[#e8f4ff] hover:btn-primary"><i class="fa-solid fa-circle-info"></i></button>
-            <button class="btn bg-[#e8f4ff]"><i class="fa-solid fa-volume-high"></i></i></button>
+            <button onclick="pronounceWord('${word.word}')" class="btn bg-[#e8f4ff]"><i class="fa-solid fa-volume-high"></i></i></button>
         </div>
         </div>
     
@@ -135,3 +145,25 @@ const displayLesson = (lessons) => {
 
 }
 loadLessons()
+
+document.getElementById("btn-search")
+.addEventListener("click", ()=>{
+    removeActive()
+    const input =document.getElementById("input-search")
+    const searchValue = input.value.trim().toLowerCase();
+    console.log(searchValue);
+    fetch("https://openapi.programming-hero.com/api/words/all")
+    .then(res=> res.json())
+    .then(data=> {
+        const allWords= data.data;
+    console.log(allWords);
+    
+    
+    
+        const filterWords = allWords.filter(word=> word.word.toLowerCase().includes(searchValue));
+       displayLevelWord(filterWords)
+        
+    })
+    
+
+})
