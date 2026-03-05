@@ -5,9 +5,9 @@ const createElement = (arr) => {
 }
 
 function pronounceWord(word) {
-  const utterance = new SpeechSynthesisUtterance(word);
-  utterance.lang = "en-EN"; // English
-  window.speechSynthesis.speak(utterance);
+    const utterance = new SpeechSynthesisUtterance(word);
+    utterance.lang = "en-EN"; // English
+    window.speechSynthesis.speak(utterance);
 }
 
 const manageSpinner = (status) => {
@@ -50,11 +50,11 @@ const loadLevelWord = (id) => {
             displayLevelWord(json.data)
         }
         )
-    
+
 }
 
 const loadWordDetails = async (id) => {
-   
+
     const url = `https://openapi.programming-hero.com/api/word/${id}`
     console.log(url);
     const res = await fetch(url)
@@ -87,8 +87,8 @@ const displayWordDetails = (wordDetails) => {
             <h2 class="font-bold mb-4">Synonyms</h2>
             <div>${createElement(wordDetails.synonyms)}</div>
         </div>
-        
-   `
+          `
+
     document.getElementById("word_modal").showModal();
 
 }
@@ -147,23 +147,23 @@ const displayLesson = (lessons) => {
 loadLessons()
 
 document.getElementById("btn-search")
-.addEventListener("click", ()=>{
-    removeActive()
-    const input =document.getElementById("input-search")
-    const searchValue = input.value.trim().toLowerCase();
-    console.log(searchValue);
-    fetch("https://openapi.programming-hero.com/api/words/all")
-    .then(res=> res.json())
-    .then(data=> {
-        const allWords= data.data;
-    console.log(allWords);
-    
-    
-    
-        const filterWords = allWords.filter(word=> word.word.toLowerCase().includes(searchValue));
-       displayLevelWord(filterWords)
-        
-    })
-    
+    .addEventListener("click", () => {
+        removeActive()
+        const input = document.getElementById("input-search")
+        const searchValue = input.value.trim().toLowerCase();
+        console.log(searchValue);
+        fetch("https://openapi.programming-hero.com/api/words/all")
+            .then(res => res.json())
+            .then(data => {
+                const allWords = data.data;
+                console.log(allWords);
 
-})
+
+
+                const filterWords = allWords.filter(word => word.word.toLowerCase().includes(searchValue));
+                displayLevelWord(filterWords)
+
+            })
+
+
+    })
